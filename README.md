@@ -1,1 +1,1 @@
-# sicp_clojure
+# My SICP exercises in Clojure
