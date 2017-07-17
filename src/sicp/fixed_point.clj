@@ -1,11 +1,11 @@
-(ns sicp.fixed-point
-  (gen-class))
+(ns sicp.fixed-point)
 
 ;;
 ;; function which searchs fixed point of any function
 ;;
 
 (def tolerance 0.00001)
+
 (defn fixed-point [f first-guess]
   (letfn [(close-enough? [v1 v2]
             (< (Math/abs (- v1 v2)) tolerance))

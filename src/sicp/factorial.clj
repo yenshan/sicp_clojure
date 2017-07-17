@@ -1,5 +1,4 @@
-(ns sicp.factorial
-  (:gen-class))
+(ns sicp.factorial)
 
 (defn factorial [n]
   (if (= n 1)
@@ -19,4 +18,7 @@
    (if (> counter max-count)
      product
      (recur (* counter product) (inc counter) max-count))))
+
+(defn test1 [& args]
+  (println (factorial 10)))
 
