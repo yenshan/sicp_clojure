@@ -17,3 +17,5 @@
            (cc (- amount
                   (first-denomination coin-values))
                coin-values))))
+
+(cc 100 us-coins)

@@ -1,9 +1,9 @@
 (ns sicp.factorial)
 
-(defn factorial [n]
+(defn fact [n]
   (if (= n 1)
     1
-    (* n (factorial (dec n)))))
+    (* n (fact (dec n)))))
 
 (defn factorial-iter [n]
   (letfn [(iter [product counter]
@@ -12,12 +12,13 @@
               (recur (* counter product) (inc counter))))]
     (iter 1N 1)))
 
-(defn factorial-iter'
-  ([n] (factorial-iter' 1N 1 n))
-  ([product counter max-count] 
-   (if (> counter max-count)
-     product
-     (recur (* counter product) (inc counter) max-count))))
+(defn fact-iter
+  ([n] (fact-iter 1 1 n))
+  ([n c p] 
+   (if (> c n)
+     p
+     (recur n (inc c) (* c p)))))
+
 
 (defn test1 [& args]
   (println (factorial 10)))
