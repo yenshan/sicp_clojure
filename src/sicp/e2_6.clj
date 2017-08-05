@@ -21,7 +21,7 @@
 ;;
 ;; definition of two 
 ;;
-;; (add-1 two)
+;; (add-1 one)
 ;; (fn [f] (fn [x] (f ((one f) x))))
 ;; (fn [f] (fn [x] (f ((fn [x] (f x)) x)))) 
 ;; (fn [f] (fn [x] (f (f x))))
@@ -32,7 +32,7 @@
 ;; direct difinition of add
 ;;
 (defn add [a b]
-  (fn [f] (fn [x] (a (b x)))))
+  (fn [f] (fn [x] (a (b f) x))))
 
 ;; (add one two)
 ;; (fn [f] (fn [x] (one ((two f) x))))
