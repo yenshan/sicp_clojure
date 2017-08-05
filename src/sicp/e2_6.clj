@@ -32,12 +32,15 @@
 ;; direct difinition of add
 ;;
 (defn add [a b]
-  (fn [f] (fn [x] (a (b f) x))))
+  (fn [f] (fn [x] ((a f) ((b f) x)))))
 
 ;; (add one two)
-;; (fn [f] (fn [x] (one ((two f) x))))
-;; (fn [f] (fn [x] (one ((fn [x] (f (f x))) x))))
-;; (fn [f] (fn [x] (one (f (f x)))))
-;; (fn [f] (fn [x] (fn [x] (f (f (f x))))))
+;; (fn [f] (one (two f)))
+;; (fn [f] (one ((fn [x] (f (f x))) x)))
+;; (fn [f] ((fn [x] (f x)) (f (f x))))
+;; (fn [f] (fn [x] (f (f (f x)))))
 
+(defn print- [x]
+  (println ((x inc) 0)))
 
+(print- (add one two))
