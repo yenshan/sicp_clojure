@@ -17,22 +17,19 @@
                    (max p1 p2 p3 p4))))
 
 (defn div-interval [x y]
-  (if (or (zero? (lower-bound y))
-          (zero? (upper-bound y)))
-    (println "error: to divide by zero.")
+  (if (and (<= (lower-bound y) 0)
+           (>= (upper-bound y) 0))
+    (println "error: interval spannig zero.")
     (mul-interval
       x
-      (make-interval (/ 1.0 (lower-bound y))
-                     (/ 1.0 (upper-bound y))))))
+      (make-interval (/ 1.0 (upper-bound y))
+                     (/ 1.0 (lower-bound y))))))
 
 
 (def a (make-interval 10 12))
-(def b (make-interval 13 15))
-(def zero1 (make-interval 0 15))
-(def zero2 (make-interval 10 0))
+(def b (make-interval -13 15))
 
 (add-interval a b)
 (mul-interval a b)
-(div-interval a zero1)
-(div-interval a zero2)
+(div-interval a b)
 
