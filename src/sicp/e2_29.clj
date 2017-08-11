@@ -17,6 +17,7 @@
 ;;
 ;; exercise 2.29b
 ;;
+(defn total-weight [mobile sum])
 (defn sum-weight [branch sum]
   (if-not (zero? (branch-length branch))
     (+ sum (branch-length branch))
