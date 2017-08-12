@@ -2,10 +2,14 @@
   (:require [sicp.sec2-2-3 :refer [accumulate enumerate-interval]])
   (:require [sicp.find-divisor :refer [prime?]]))
 
-(defn append [coll x]
-  (if (nil? x)
-    coll
-    (concat coll x)))
+;(defn append [coll x]
+;  (if (nil? x)
+;    coll
+;    (concat coll x)))
+
+;; definition of exercise 2.33
+(defn append [seq1 seq2]
+  (accumulate cons seq2 seq1))
 
 ;;
 ;; generate pair of (i, j) when 1 <= j < i <= n

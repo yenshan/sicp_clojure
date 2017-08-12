@@ -29,3 +29,5 @@
   (println "original tree:" ttree)
   (println "square tree 1:" (square-tree ttree))
   (println "square tree 2:" (square-tree_map ttree)))
+
+(e2_30-test)
