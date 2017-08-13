@@ -33,14 +33,14 @@
 (test2 3)
 ;-> ((2 1) (3 1) (3 2))
 
-(defn test [n]
+(defn test3 [n]
   (accumulate append
               nil 
               (map (fn [i]
                      (map (fn [j] (list i j))
                           (enumerate-interval 1 (- i 1))))
                    (enumerate-interval 1 n))))
-(test 6)
+(test3 6)
 
 ;;
 ;;
