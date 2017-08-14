@@ -71,3 +71,22 @@
     (queen-cols board-size)))
 
 (print-queens (queens 4))
+
+
+;;
+;; implement function queens in Clojure style
+;;
+(defn clj-queens
+  ([board-size] (clj-queens board-size board-size))
+  ([board-size k]
+   (if (zero? k)
+     (list empty-board)
+     (filter
+       (fn [positions] (safe? k positions))
+       (for [rest-of-queens (clj-queens board-size (- k 1))
+             new-row (range 1 (+ board-size 1))]
+         (adjoin-position new-row k rest-of-queens))))))
+
+(print-queens (clj-queens 6))
+
+
