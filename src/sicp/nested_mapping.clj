@@ -63,13 +63,27 @@
 (defn prime-sum-pairs [n]
   (map make-pair-sum
        (filter prime-sum?
-               (flatmap (fn [i]
-                          (map (fn [j] (list i j))
-                               (enumerate-interval 1 (- i 1))))
-                          (enumerate-interval 1 n)))))
+               (flatmap 
+                 (fn [i]
+                   (map (fn [j] (list i j))
+                        (enumerate-interval 1 (- i 1))))
+                 (enumerate-interval 1 n)))))
 
 (test2 6)
 (prime-sum-pairs 6)
+
+;;
+;; definition of prime-sum-paris by using for-syntax
+;;
+(defn prime-sum-paris_for [n]
+  (->> (for [i (enumerate-interval 1 n)]
+           (for [j (enumerate-interval 1 (- i 1))]
+             (list i j)))
+       (accumulate append nil)
+       (filter prime-sum?)
+       (map make-pair-sum)))
+  
+(prime-sum-paris_for 6)
 
 ;;
 ;; permutations

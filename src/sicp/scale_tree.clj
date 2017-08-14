@@ -13,6 +13,8 @@
         :else (cons (scale-tree (first tree) factor)
                     (scale-tree (rest tree) factor))))
 
+(scale-tree ttree 10)
+
 ;;
 ;; implement scale-tree by using map
 ;;
@@ -25,7 +27,15 @@
 
 (def ttree (list 1 (list 2 (list 3 4) 5) (list 6 7)))
 
-(scale-tree ttree 10)
 (scale-tree_map ttree 10)
 
+;;
+;; implement scale-tree by using for syntax
+;;
+(defn scale-tree_for [tree factor]
+  (for [item tree]
+    (if (coll? item)
+      (scale-tree_for item factor)
+      (* item factor))))
 
+(scale-tree_for ttree 10)
