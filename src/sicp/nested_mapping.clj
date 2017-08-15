@@ -86,6 +86,17 @@
 (prime-sum-paris_for 6)
 
 ;;
+;; Clojure sytle: definition of prime-sum-pairs by using for-macro with :when
+;;
+(defn clj-prime-sum-pairs [n]
+  (for [i (range 1 (inc n))
+        j (range 1 i)
+        :when (prime? (+ i j))]
+    (list i j (+ i j))))
+  
+(clj-prime-sum-pairs 6)
+
+;;
 ;; permutations
 ;;
 
