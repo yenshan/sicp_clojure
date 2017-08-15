@@ -72,6 +72,12 @@
                      (->Vector 1.0 1.0)
                      (->Vector 0.0 0.0)))
 
+(defn flip-horiz [painter]
+  (transform-painter painter
+                     (->Vector 1.0 0.0)
+                     (->Vector 0.0 0.0)
+                     (->Vector 1.0 1.0)))
+
 (defn shurink-to-upper-right [painter]
   (transform-painter painter
                      (->Vector 0.5 0.5)
@@ -83,6 +89,18 @@
                      (->Vector 1.0 0.0)
                      (->Vector 1.0 1.0)
                      (->Vector 0.0 0.0)))
+
+(defn rotate180 [painter]
+  (transform-painter painter
+                     (->Vector 1.0 1.0)
+                     (->Vector 0.0 1.0)
+                     (->Vector 1.0 0.0)))
+
+(defn rotate270 [painter]
+  (transform-painter painter
+                     (->Vector 0.0 1.0)
+                     (->Vector 0.0 0.0)
+                     (->Vector 1.0 1.0)))
 
 (defn squash-inwards [painter]
   (transform-painter painter
@@ -108,9 +126,12 @@
 ;;
 ;; 
 ;;
-(def pic-points [{:x 0.2 :y 0.8} {:x 0.8 :y 0.8}
-                 {:x 0.2 :y 0.2} {:x 0.8 :y 0.2}
-                 {:x 0.8 :y 0.8}])
+;(def pic-points [{:x 0.2 :y 0.8} {:x 0.8 :y 0.8}
+;                 {:x 0.2 :y 0.2} {:x 0.8 :y 0.2}
+;                 {:x 0.8 :y 0.8}])
+
+(def pic-points [{:x 0.2 :y 0.2} {:x 0.5 :y 0.8}
+                 {:x 0.8 :y 0.5} {:x 0.3 :y 0.5}])
 
 (defn make-segment-list-from-points [coll]
   (map (fn [[p1 p2]]
