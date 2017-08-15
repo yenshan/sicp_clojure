@@ -1,10 +1,6 @@
-(ns sicp.the-picture-language)
-
-(defn beside [left right])
-(defn below [bottom top])
-
-(defn flip-horiz [painter])
-(defn flip-vert [painter])
+(ns sicp.the-picture-language
+  (:import [javax.swing JFrame JPanel])
+  (:require [sicp.frame-painter :refer :all]))
 
 ;;
 ;;
@@ -14,13 +10,13 @@
     (below painter2 painter2)))
 
 (defn up-split [painter n]
-  (if (zero? 0)
+  (if (zero? n)
     painter
     (let [smaller (up-split painter (dec n))]
       (below painter (beside smaller smaller)))))
 
 (defn right-split [painter n]
-  (if (zero? 0)
+  (if (zero? n)
     painter
     (let [smaller (right-split painter (dec n))]
       (beside painter (below smaller smaller)))))
@@ -35,7 +31,6 @@
           corner (corner-split painter (dec n))]
       (beside (below painter top-left)
               (below bottom-right corner)))))
-
 
 (defn square-limit [painter n]
  (let [quarter (corner-split painter n)
@@ -56,30 +51,37 @@
                                  identity flip-vert)]
     (combine4 painter)))
 
-(def rotate180 (comp flip-vert flip-horiz))
-
 (defn square-limit2 [painter n]
-  (let [combine4 (square-of-four flip-vert identity
+  (let [combine4 (square-of-four flip-horiz identity
                                  rotate180 flip-vert)]
     (combine4 (corner-split painter n))))
 
-;;
-;; Frames
-;;
 
-(defn origin-frame [frame])
-(defn add-vect [a b])
-(defn scale-vect [a b])
-(defn xcor-vect [v])
-(defn ycor-vect [v])
-(defn edge1-frame [frame])
-(defn edge2-frame [frame])
+;;
+;; test paint
+;;
+(defn- test-paint [g f painter]
+  ;((flipped-pairs painter) g f)
+  ;((up-split painter 3) g f)
+  ;((right-split painter 3) g f)
+  ;((corner-split painter 3) g f)
+  ;((square-limit painter 3) g f)
+  ;((flipped-pairs2 painter) g f)
+  ((square-limit2 painter 3) g f)
+  )
 
-(defn frame-coord-map [frame]
-  (fn [v]
-    (add-vect (origin-frame frame)
-              (add-vect (scale-vect (xcor-vect v)
-                                    (edge1-frame frame))
-                        (scale-vect (ycor-vect v)
-                                    (edge2-frame frame))))))
-              
+(defn the-picture-language-main []
+  (letfn [(main-paint [g]
+            (let [f (->Frame (->Vector 0 0) (->Vector 400 0) (->Vector 0 400))
+                  segs (make-segment-list-from-points pic-points)
+                  painter (segment->painter segs)]
+              (test-paint g f painter)))]
+    (let [frame (JFrame. "Test Draw")]
+      (doto frame
+        (.add (proxy [JPanel] []
+                (paintComponent [g] (main-paint g))))
+        (.pack)
+        (.setDefaultCloseOperation JFrame/EXIT_ON_CLOSE)
+        (.setSize WIDTH HEIGHT)
+        (.setVisible true)))))
+

@@ -122,6 +122,10 @@
       (paint-left g frame)
       (paint-right g frame))))
 
+(defn below [painter1 painter2]
+  (let [painter1' (rotate270 painter1)
+        painter2' (rotate270 painter2)]
+    (rotate90 (beside painter1' painter2'))))
 
 ;;
 ;; 
