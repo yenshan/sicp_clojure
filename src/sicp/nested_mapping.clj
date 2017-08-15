@@ -101,7 +101,7 @@
 ;;
 
 (defn -remove [item seqc]
-  (filter (fn [x] (not (= x item))) seqc))
+  (filter #(not= item %) seqc))
 
 (defn permutations [s]
   (if (empty? s)
@@ -112,4 +112,18 @@
              s)))
 
 (permutations '(1 2 3))
+
+;;
+;; implematations of permutations in Clojure style
+;;
+(defn clj-permutations [coll]
+  (if (empty? coll)
+    (list nil)
+    (for [x coll
+          p (clj-permutations (filter #(not= x %) coll))]
+      (cons x p))))
+          
+(clj-permutations '(1 2 3))
+
+
 
