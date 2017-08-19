@@ -1,6 +1,6 @@
 (ns sicp.e2_59
   (:require [clojure.test :refer :all])
-  (:require [sicp.set-as-unordered-list :refer :all]))
+  (:require [sicp.set-as-unordered-list :refer [adjoin-set]]))
 
 (defn union-set [set1 set2]
   (if (empty? set1)
@@ -13,7 +13,7 @@
     (recur (rest set1) (adjoin-set (first set1) set2))))
 
 (defn union-set3 [set1 set2]
-  (reduce (fn [res item] (adjoin-set item res)) set2 set1)) 
+  (reduce #(adjoin-set %2 %1) set2 set1)) 
 
 
 (deftest test-e2_59
