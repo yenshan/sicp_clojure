@@ -54,7 +54,7 @@
           (deriv (base exp) variable))
         :else (println "unkown expression type -- DERIV" exp)))
 
-(deftest e2_56-test
+(deftest e2_57-test
   (testing "test deriv"
     (is (= '(+ a (+ b (+ c d))) (make-sum 'a 'b 'c 'd)))
     (is (= '(* a (* b c)) (make-product 'a 'b 'c)))
