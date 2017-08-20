@@ -24,10 +24,12 @@
                                      (left-branch set)
                                      (adjoin-set x (right-branch set)))))
 
+(defn- coll->tree [coll]
+  (reduce #(adjoin-set %2 %1) '() coll))
+
 (deftest test-set-as-binary-tree
   (testing "test"
     (is (= 2 (left-branch '(1 2 3))))
     (is (= 3 (right-branch '(1 2 3))))
-    (let [tset (reduce #(adjoin-set %2 %1) '() [4 3 6 2 1])]
-      (is (element-of-set? 3 tset)))
+    (is (element-of-set? 3 (coll->tree [1 3 4 5 8])))
     ))
