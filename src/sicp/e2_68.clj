@@ -20,7 +20,7 @@
             (encode-symbol symbol
                           (right-branch tree)
                           (conj bits 1))
-            :else  bits ))))
+            :else (println "not symbol in tree:" symbol)))))
 
 (defn encode [message tree]
   (if (empty? message)
