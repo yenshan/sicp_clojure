@@ -24,5 +24,5 @@
 
 (deftest test-e2_70
   (testing "How many bits are required for the encoding?"
-    (is (= 123 (count (encode message-list tree))))
+    (is (= 120 (count (encode message-list tree))))
     ))

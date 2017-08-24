@@ -1,12 +1,12 @@
 (ns sicp.e2_69
   (:require [clojure.test :refer :all])
-  (:require [sicp.huffman-tree :refer [make-leaf-set make-code-tree]]))
+  (:require [sicp.huffman-tree :refer [adjoin-set make-leaf-set make-code-tree]]))
 
 (defn successive-merge [coll]
   (if (= 1 (count coll))
     coll
     (let [new-elem (make-code-tree (second coll) (first coll))
-          new-coll (cons new-elem (rest (rest coll)))]
+          new-coll (adjoin-set new-elem (rest (rest coll)))]
       (successive-merge new-coll))))
 
 (defn generate-huffman-tree [pairs]
