@@ -23,9 +23,7 @@
   (swap! table-operations assoc-in [key1 key2] func))
 
 (defn tget [key1 key2]
-  (-> @table-operations
-      (get key1)
-      (get key2)))
+  (get-in @table-operations [key1 key2]))
 
 (defn install-rectangular-package []
   (letfn [(real-part [z] (first z))
