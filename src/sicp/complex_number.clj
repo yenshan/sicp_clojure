@@ -1,29 +1,9 @@
 (ns sicp.complex-number
   (:require [clojure.test :refer :all])
+  (:require [sicp.data-directed-lib :refer :all])
   (:require [clojure.algo.generic.math-functions :as math]))
 
 (defn square [x] (* x x))
-
-(defn attach-tag [type-tag contents]
-  (list type-tag contents))
-
-(defn type-tag [datum]
-  (if (coll? datum)
-    (first datum)
-    (println "Bad tagged datum -- TYPE-TAG" datum)))
-
-(defn contents [datum]
-  (if (coll? datum)
-    (second datum)
-    (println "Bad tagged datum -- CONTENTS" datum)))
-
-(def table-operations (atom {}))
-
-(defn tput [key1 key2 func]
-  (swap! table-operations assoc-in [key1 key2] func))
-
-(defn tget [key1 key2]
-  (get-in @table-operations [key1 key2]))
 
 (defn install-rectangular-package []
   (letfn [(real-part [z] (first z))
@@ -72,14 +52,6 @@
     (tput 'make-from-mag-ang 'polar
       (fn [r a] (tag (make-from-mag-ang r a))))
     ))
-
-(defn apply-generic [op & args]
-  (let [type-tags (map type-tag args)
-        proc (tget op type-tags)]
-    (if proc
-      (apply proc (map contents args))
-      (println "No method for these types -- APPLY-GENERIC"
-               (list op type-tags)))))
 
 (defn real-part [z] (apply-generic 'real-part z))
 (defn imag-part [z] (apply-generic 'imag-part z))

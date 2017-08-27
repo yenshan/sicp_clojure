@@ -1,7 +1,7 @@
 (ns sicp.generic-arithmetie-operations
   (:require [clojure.test :refer :all])
   (:require [sicp.gcd :refer [gcd]])
-  (:require [sicp.complex-number :refer [real-part imag-part magnitude angle]])
+  (:require [sicp.complex-number :refer [real-part imag-part magnitude angle install-rectangular-package install-polar-package]])
   (:require [sicp.data-directed-lib :refer :all]))
 
 (defn add [x y] (apply-generic 'add x y))
@@ -102,7 +102,8 @@
     ))
 
 (defn make-complex-from-real-imag [x y]
-  ((tget 'make-from-mag-ang 'complex) x y))
+  ((tget 'make-from-real-imag 'complex) x y))
 
 (defn make-complex-from-mag-ang [r a]
   ((tget 'make-from-mag-ang 'complex) r a))
+
