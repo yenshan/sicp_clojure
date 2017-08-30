@@ -8,18 +8,24 @@
 (defn sub [x y] (apply-generic 'sub x y))
 (defn mul [x y] (apply-generic 'mul x y))
 (defn div [x y] (apply-generic 'div x y))
+(defn equ? [x y] (apply-generic 'equ? x y))
+(defn =zero? [x y] (apply-generic '=zero? x y))
 
 (defn install-scheme-number-package []
   (letfn [(tag [x]
             (attach-tag 'scheme-number x))]
-    (tput 'add '(scheme-number schem-number)
+    (tput 'add '(scheme-number scheme-number)
       (fn [x y] (tag (+ x y))))
-    (tput 'sub '(scheme-number schem-number)
+    (tput 'sub '(scheme-number scheme-number)
       (fn [x y] (tag (- x y))))
-    (tput 'mul '(scheme-number schem-number)
+    (tput 'mul '(scheme-number scheme-number)
       (fn [x y] (tag (* x y))))
-    (tput 'div '(scheme-number schem-number)
+    (tput 'div '(scheme-number scheme-number)
       (fn [x y] (tag (/ x y))))
+    (tput 'equ? '(scheme-number scheme-number)
+      (fn [x y] (= x y)))
+    (tput '=zero? '(scheme-number)
+      (fn [x] (zero? x)))
     (tput 'make 'scheme-number
       (fn [x] (tag x))))
   )
@@ -58,6 +64,11 @@
       (fn [x y] (tag (mul-rat x y))))
     (tput 'div '(rational rational)
       (fn [x y] (tag (div-rat x y))))
+    (tput 'equ? '(rational rational)
+      (fn [x y] (and (= (numer x) (numer y))
+                     (= (denom x) (denom y)))))
+    (tput '=zero? '(rational)
+      (fn [x] (zero? (numer x))))
     (tput 'make 'rational
       (fn [n d] (tag (make-rat n d))))
     ))
@@ -95,6 +106,10 @@
       (fn [x y] (tag (mul-complex x y))))
     (tput 'div '(complex complex)
       (fn [x y] (tag (div-complex x y))))
+    (tput 'equ? '(complex complex)
+      (fn [x y] (equ? x y)))
+    (tput '=zero? '(complex)
+      (fn [x] (=zero? (contents x))))
     (tput 'make-from-real-imag 'complex
       (fn [x y] (tag (make-from-real-imag x y))))
     (tput 'make-from-mag-ang 'complex
@@ -107,3 +122,15 @@
 (defn make-complex-from-mag-ang [r a]
   ((tget 'make-from-mag-ang 'complex) r a))
 
+
+(install-polar-package)
+(install-complex-package)
+
+(equ? (make-complex-from-mag-ang 1 2)
+      (make-complex-from-mag-ang 1 2))
+
+(deftest test-generic-arithmetie-operation
+  (testing "test scheme number"
+    (let [_ (install-scheme-number-package)]
+      (is (= (make-scheme-number 2) (add (make-scheme-number 1) (make-scheme-number 1))))
+    )))

@@ -23,6 +23,12 @@
     (tput 'imag-part '(rectangular) imag-part)
     (tput 'magnitude '(rectangular) magnitude)
     (tput 'angle '(rectangular) angle)
+    (tput 'equ? '(rectangular rectangular)
+     (fn [x y] (and (= (real-part x) (real-part y))
+                    (= (imag-part x) (imag-part y)))))
+    (tput '=zero? '(rectangular)
+     (fn [x] (and (zero? (real-part x))
+                  (zero? (imag-part x)))))
     (tput 'make-from-real-imag 'rectangular
       (fn [x y] (tag (make-from-real-imag x y))))
     (tput 'make-from-mag-ang 'rectangular
@@ -47,6 +53,11 @@
     (tput 'imag-part '(polar) imag-part)
     (tput 'magnitude '(polar) magnitude)
     (tput 'angle '(polar) angle)
+    (tput 'equ? '(polar polar)
+     (fn [x y] (and (= (magnitude x) (magnitude y))
+                    (= (angle x) (angle y)))))
+    (tput '=zero? '(polar)
+     (fn [x] (zero? (magnitude x))))
     (tput 'make-from-real-imag 'polar
       (fn [x y] (tag (make-from-real-imag x y))))
     (tput 'make-from-mag-ang 'polar
