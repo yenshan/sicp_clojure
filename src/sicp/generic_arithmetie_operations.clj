@@ -9,7 +9,7 @@
 (defn mul [x y] (apply-generic 'mul x y))
 (defn div [x y] (apply-generic 'div x y))
 (defn equ? [x y] (apply-generic 'equ? x y))
-(defn =zero? [x y] (apply-generic '=zero? x y))
+(defn =zero? [x] (apply-generic '=zero? x))
 
 (defn install-scheme-number-package []
   (letfn [(tag [x]
@@ -109,7 +109,7 @@
     (tput 'equ? '(complex complex)
       (fn [x y] (equ? x y)))
     (tput '=zero? '(complex)
-      (fn [x] (=zero? (contents x))))
+      (fn [x] (=zero? x)))
     (tput 'make-from-real-imag 'complex
       (fn [x y] (tag (make-from-real-imag x y))))
     (tput 'make-from-mag-ang 'complex
@@ -122,12 +122,6 @@
 (defn make-complex-from-mag-ang [r a]
   ((tget 'make-from-mag-ang 'complex) r a))
 
-
-(install-polar-package)
-(install-complex-package)
-
-(equ? (make-complex-from-mag-ang 1 2)
-      (make-complex-from-mag-ang 1 2))
 
 (deftest test-generic-arithmetie-operation
   (testing "test scheme number"
