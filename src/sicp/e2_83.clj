@@ -24,7 +24,7 @@
     (tput 'sub '(real-number real-number)
       (fn [x y] (tag (- x y))))
     (tput 'make 'real-number
-      (fn [x] (tag x))))
+      (fn [x] (tag (double x)))))
 )
 
 (defn make-real-number [n]
@@ -37,7 +37,7 @@
   (condp = (type-tag x)
     'scheme-number (make-rational (contents x) 1)
     'rational (make-real-number (->double x))
-    'real-number (make-complex-from-real-imag (contents x) 0)
+    'real-number (make-complex-from-real-imag (int (contents x)) 0)
     :else x))
 
 

@@ -11,6 +11,9 @@
 (defn equ? [x y] (apply-generic 'equ? x y))
 (defn =zero? [x] (apply-generic '=zero? x))
 
+;;
+;; scheme number package
+;;
 (defn install-scheme-number-package []
   (letfn [(tag [x]
             (attach-tag 'scheme-number x))]
@@ -33,6 +36,9 @@
 (defn make-scheme-number [n]
   ((tget 'make 'scheme-number) n))
 
+;;
+;; rational number package
+;;
 (defn install-rational-package []
   (letfn [(numer [x] (first x))
           (denom [x] (second x))
@@ -79,7 +85,31 @@
 (defn make-rational [n d]
   ((tget 'make 'rational) n d))
 
+(defn ->double [x]
+  ((tget '->double '(rational)) x))
 
+;;
+;; real number package
+;;
+(defn install-real-number-package []
+  (letfn [(tag [x]
+            (attach-tag 'real-number x))]
+    (tput 'add '(real-number real-number)
+      (fn [x y] (tag (+ x y))))
+    (tput 'sub '(real-number real-number)
+      (fn [x y] (tag (- x y))))
+    (tput 'equ? '(real-number real-number)
+      (fn [x y] (= x y)))
+    (tput 'make 'real-number
+      (fn [x] (tag (double x)))))
+)
+
+(defn make-real-number [n]
+  ((tget 'make 'real-number) n))
+
+;;
+;; complex number package
+;;
 (defn install-complex-package []
   (letfn [
           (make-from-real-imag [x y]
