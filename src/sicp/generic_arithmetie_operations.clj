@@ -69,6 +69,9 @@
                      (= (denom x) (denom y)))))
     (tput '=zero? '(rational)
       (fn [x] (zero? (numer x))))
+    (tput '->double '(rational)
+      (fn [x] 
+        (let [dat (contents x)] (double (/ (numer dat) (denom dat))))))
     (tput 'make 'rational
       (fn [n d] (tag (make-rat n d))))
     ))

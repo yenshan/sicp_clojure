@@ -45,11 +45,16 @@
         _ (install-rectangular-package)
         _ (install-complex-package)
         _ (install-coercion-package)]
+    (testing "test get-coercion"
+      (is (not= nil (get-coercion 'scheme-number 'complex)))
+      (is (= nil (get-coercion 'scheme-number 'scheme-number)))
+      )
     (testing "test scheme-number->complex"
       (is (= '(complex (rectangular (1 0))) (scheme-number->complex (make-scheme-number 1))))
       )
     (testing "test add complex scheme" 
       (is (= '(complex (rectangular (13 2))) (add (make-scheme-number 12)
                                                  (make-complex-from-real-imag 1 2))))
+      ;(is (= nil (add (make-scheme-number 12) (make-scheme-number 10))))
       )))
 
