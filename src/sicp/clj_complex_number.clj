@@ -1,9 +1,9 @@
-;;
-;; Implementation of Complex Number in Clojure style
-;;
 (ns sicp.clj-complex-number
   (:require [clojure.test :refer :all])
   (:require [clojure.algo.generic.math-functions :as math]))
+;;
+;; Implementation of Complex Number in Clojure style
+;;
 
 (defn square [x] (* x x))
 
