@@ -10,6 +10,7 @@
 (defn div [x y] (apply-generic 'div x y))
 (defn equ? [x y] (apply-generic 'equ? x y))
 (defn =zero? [x] (apply-generic '=zero? x))
+(defn negate [x] (apply-generic 'negate x))
 
 ;;
 ;; scheme number package
@@ -25,6 +26,8 @@
       (fn [x y] (tag (* x y))))
     (tput 'div '(scheme-number scheme-number)
       (fn [x y] (tag (/ x y))))
+    (tput 'negate '(scheme-number)
+      (fn [x] (tag (- x))))
     (tput 'equ? '(scheme-number scheme-number)
       (fn [x y] (= x y)))
     (tput '=zero? '(scheme-number)
@@ -43,7 +46,7 @@
   (letfn [(numer [x] (first x))
           (denom [x] (second x))
           (make-rat [n d] 
-            (let [g (gcd n d)]
+            (let [g (gcd (Math/abs n) d)]
               [(/ n g) (/ d g)]))
           (add-rat [x y]
             (make-rat (+ (* (numer x) (denom y))
@@ -70,6 +73,9 @@
       (fn [x y] (tag (mul-rat x y))))
     (tput 'div '(rational rational)
       (fn [x y] (tag (div-rat x y))))
+    (tput 'negate '(rational)
+      (fn [x] (tag (make-rat (- (numer x))
+                             (denom x)))))
     (tput 'equ? '(rational rational)
       (fn [x y] (and (= (numer x) (numer y))
                      (= (denom x) (denom y)))))
@@ -98,6 +104,8 @@
       (fn [x y] (tag (+ x y))))
     (tput 'sub '(real-number real-number)
       (fn [x y] (tag (- x y))))
+    (tput 'negate '(real-number)
+      (fn [x] (tag (- x))))
     (tput 'equ? '(real-number real-number)
       (fn [x y] (= x y)))
     (tput 'make 'real-number
@@ -139,6 +147,9 @@
       (fn [x y] (tag (mul-complex x y))))
     (tput 'div '(complex complex)
       (fn [x y] (tag (div-complex x y))))
+    (tput 'negate '(complex)
+      (fn [x] (tag (make-from-real-imag (- (real-part x))
+                                        (imag-part x)))))
     (tput 'equ? '(complex complex)
       (fn [x y] (equ? x y)))
     (tput '=zero? '(complex)
@@ -160,4 +171,10 @@
   (testing "test scheme number"
     (let [_ (install-scheme-number-package)]
       (is (= (make-scheme-number 2) (add (make-scheme-number 1) (make-scheme-number 1))))
-    )))
+      )
+    )
+  (testing "make-rational"
+    (is (= '(rational [1 2]) (make-rational 1 2)))
+    (is (= '(rational [1 2]) (make-rational -1 2)))
+    )
+  )

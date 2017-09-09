@@ -6,9 +6,9 @@
 ;;
 ;; abstract data: term
 ;;
-(defn- make-term [order coeff] (list order coeff))
-(defn- order [term] (first term))
-(defn- coeff [term] (second term))
+(defn make-term [order coeff] (list order coeff))
+(defn order [term] (first term))
+(defn coeff [term] (second term))
 
 ;;
 ;; abstract data: term list
@@ -23,7 +23,7 @@
     term-list
     (cons term term-list)))
 
-(defn- add-terms [L1 L2]
+(defn add-terms [L1 L2]
   (cond (empty-termlist? L1) L2
         (empty-termlist? L2) L1
         :else 
@@ -58,15 +58,15 @@
 ;;
 ;; arithmetic of polynomial 
 ;;
-(defn- make-poly [variable term-list]
+(defn make-poly [variable term-list]
   (list variable term-list))
 
-(defn- variable [p] (first p))
-(defn- term-list [p] (second p))
+(defn variable [p] (first p))
+(defn term-list [p] (second p))
 
-(defn- variable? [x] (symbol? x))
+(defn variable? [x] (symbol? x))
 
-(defn- same-variable? [v1 v2]
+(defn same-variable? [v1 v2]
   (and (variable? v1) (variable? v2) (= v1 v2)))
 
 (defn- add-poly [p1 p2]
@@ -130,6 +130,11 @@
     (testing "test make-polynomial"
       (is (= '(polynomial (x ((2 (scheme-number 3)) (1 (scheme-number 2)))))
              (make-polynomial 'x '((2 (scheme-number 3)) (1 (scheme-number 2))))))
+    )
+    (testing "test add-polynomial"
+      (is (= '(polynomial (x ((2 (scheme-number 4)))))
+             (add (make-polynomial 'x '((2 (scheme-number 3))))
+                  (make-polynomial 'x '((2 (scheme-number 1)))))))
     )
   )
   )
