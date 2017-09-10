@@ -12,10 +12,8 @@
 ;; abstract data: term list
 ;;
 (defrecord TermList [dat])
+
 (def the-empty-termlist (->TermList '()))
-(defn- first-term [term-list] (first (:dat term-list)))
-(defn- rest-terms [term-list] (->TermList (rest (:dat term-list))))
-(defn- empty-termlist? [term-list] (empty? (:dat term-list)))
 
 (defn- adjoin-term [term term-list]
   (if (=zero? (:coeff term))
@@ -25,37 +23,37 @@
 ;;
 ;; Term arithmetic operations
 ;;
-(defmethod add [TermList TermList] [L1 L2]
-  (cond (empty-termlist? L1) L2
-        (empty-termlist? L2) L1
+(defn- add-terms [L1 L2]
+  (cond (empty? L1) L2
+        (empty? L2) L1
         :else 
-         (let [t1 (first-term L1)
-               t2 (first-term L2)]
+         (let [t1 (first L1)
+               t2 (first L2)]
           (cond (> (:order t1) (:order t2)) 
                  (adjoin-term t1
-                              (add (rest-terms L1) L2))
+                              (add-terms (rest L1) L2))
                 (< (:order t1) (:order t2)) 
                  (adjoin-term t2
-                              (add L1 (rest-terms L2)))
+                              (add-terms L1 (rest L2)))
                 :else 
                  (adjoin-term (->Term (:order t1)
-                                         (add (:coeff t1) (:coeff t2)))
-                              (add (rest-terms L1)
-                                         (rest-terms L2)))))))
+                                      (add (:coeff t1) (:coeff t2)))
+                              (add-terms (rest L1)
+                                         (rest L2)))))))
 (defn- mul-term-by-all-terms [t1 L]
-  (if (empty-termlist? L)
+  (if (empty? L)
     the-empty-termlist
-    (let [t2 (first-term L)]
+    (let [t2 (first L)]
       (adjoin-term
         (->Term (+ (:order t1) (:order t2))
                 (mul (:coeff t1) (:coeff t2)))
-        (mul-term-by-all-terms t1 (rest-terms L))))))
+        (mul-term-by-all-terms t1 (rest L))))))
 
 (defmethod mul [TermList TermList] [L1 L2]
-  (if (empty-termlist? L1)
+  (if (empty? L1)
     the-empty-termlist
-    (add (mul-term-by-all-terms (first-term L1) L2)
-         (mul (rest-terms L1) L2))))
+    (add (mul-term-by-all-terms (first L1) L2)
+         (mul (rest L1) L2))))
       
 ;;
 ;; arithmetic of polynomial 
@@ -81,21 +79,19 @@
                        (:term-list p2)))
     (println "Polys not in same var -- MUL-POLY" (list p1 p2))))
 
-(defmethod =zero? [Polynomial] [p]
-  (letfn [(coeff-not-zero? [term]
-            (not (=zero? (:coeff term))))]
+(defmethod =zero? Polynomial [p]
+  (let [coeff-not-zero? (comp not =zero? :coeff)]
     (->> (:term-list p)
          (some coeff-not-zero?)
          (= nil))))
-
-(defn make-polynomial [var terms]
-  (->Polynomial var terms))
-
 
 ;;
 ;;
 ;;
 (deftest test-sparse-polynomials
+  (testing "test =zero?"
+    (is (=zero? (->Polynomial 'x (list (->Term 2 (->SchemeNumber 0))))))
+    )
   (testing "test add [TermList TermList]"
     (let [term1 (->Term 2 (->SchemeNumber 2))
           tl1 (adjoin-term term1 the-empty-termlist)]
