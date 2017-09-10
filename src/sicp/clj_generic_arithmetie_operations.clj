@@ -14,6 +14,7 @@
 (defmulti div (fn [x y] [(class x) (class y)]))
 (defmulti equ? (fn [x y] [(class x) (class y)]))
 (defmulti raise (fn [n] (class n))) 
+(defmulti =zero? (fn [n] (class n))) 
 
 (defmulti ->list (fn [d] (class d)))
 
@@ -44,6 +45,10 @@
 (defmethod equ? [SchemeNumber SchemeNumber]
   [{x :dat} {y :dat}]
   (= x y))
+
+(defmethod =zero? SchemeNumber
+  [{x :dat}]
+  (zero? x))
 
 ;;
 ;; rational number package
