@@ -1,6 +1,5 @@
 (ns sicp.e2_90.dense-termlist
   (:require [clojure.test :refer :all])
-  (:require [sicp.data-directed-lib :refer :all])
   (:require [sicp.clj-generic-arithmetie-operations :refer :all])
   (:require [sicp.e2_90.termlist-interface :refer :all]))
 
@@ -8,6 +7,9 @@
 ;; abstract data: term list
 ;;
 (defrecord DenseTermList [dat])
+
+(defmethod constructor DenseTermList [L]
+  (fn [dat] (->DenseTermList dat)))
 
 (defn make-dense-num-termlist [coll]
   (->DenseTermList 
@@ -22,9 +24,6 @@
 (defn- adjoin-term [term term-list]
   (->DenseTermList (cons term (:dat term-list))))
 
-(def ^:private empty-term? (comp empty? :dat))
-(def ^:private first-term (comp first :dat))
-(def ^:private rest-terms (comp ->DenseTermList rest :dat))
 
 (defmethod add-terms [DenseTermList DenseTermList] [L1 L2]
   (cond (empty-term? L1) L2

@@ -1,13 +1,8 @@
 (ns sicp.e2_90.sparse-termlist
   (:require [clojure.test :refer :all])
-  (:require [sicp.data-directed-lib :refer :all])
-  (:require [sicp.e2_90.termlist-interface :refer :all])
-  (:require [sicp.clj-generic-arithmetie-operations :refer :all]))
+  (:require [sicp.clj-generic-arithmetie-operations :refer :all])
+  (:require [sicp.e2_90.termlist-interface :refer :all]))
 
-
-;(defmulti ->vec (fn [e] (class e)))
-;(defmulti add-terms (fn [e1 e2] [(class e1) (class e2)]))
-;(defmulti mul-terms (fn [e1 e2] [(class e1) (class e2)]))
 ;;
 ;; abstract data: term
 ;;
@@ -27,11 +22,11 @@
 ;;
 (defrecord SparseTermList [dat])
 
-(defn- coll->vec [coll]
-  (map #(->vec %) coll))
+(defmethod constructor SparseTermList [L]
+  (fn [dat] (->SparseTermList dat)))
 
 (defmethod ->vec SparseTermList [coll]
-  (coll->vec (:dat coll)))
+  (map #(->vec %) (:dat coll)))
 
 (def ^:private the-empty-termlist (->SparseTermList '()))
 
@@ -39,10 +34,6 @@
   (if (=zero? (:coeff term))
     term-list
     (->SparseTermList (cons term (:dat term-list)))))
-
-(def ^:private empty-term? (comp empty? :dat))
-(def ^:private first-term (comp first :dat))
-(def ^:private rest-terms (comp ->SparseTermList rest :dat))
 
 (defmethod add-terms [SparseTermList SparseTermList] [L1 L2]
   (cond (empty-term? L1) L2

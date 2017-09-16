@@ -17,6 +17,7 @@
 (defmulti =zero? (fn [n] (class n))) 
 
 (defmulti ->list (fn [d] (class d)))
+(defmulti ->vec (fn [e] (class e)))
 
 ;;
 ;; scheme number package

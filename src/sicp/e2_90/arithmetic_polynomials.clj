@@ -1,6 +1,5 @@
 (ns sicp.e2_90.arithmetic-polynomials
   (:require [clojure.test :refer :all])
-  (:require [sicp.data-directed-lib :refer :all])
   (:require [sicp.clj-generic-arithmetie-operations :refer :all])
   (:require [sicp.e2_90.termlist-interface :refer :all])
   (:require [sicp.e2_90.dense-termlist :refer :all])
