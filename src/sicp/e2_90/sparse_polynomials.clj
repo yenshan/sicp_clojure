@@ -3,22 +3,41 @@
   (:require [sicp.data-directed-lib :refer :all])
   (:require [sicp.clj-generic-arithmetie-operations :refer :all]))
 
+
 ;;
 ;; abstract data: term
 ;;
 (defrecord Term [order coeff])
 
+(defmethod ->list Term [e]
+  (list 'Term (:order e) (->list (:coeff e))))
+
+(defn- ->vec [e]
+  [(:order e) (:dat (:coeff e))])
+
+(defn- make-num-term [n1 n2]
+  (->Term n1 (->SchemeNumber n2)))
+
 ;;
 ;; abstract data: term list
 ;;
-(defrecord TermList [dat])
 
-(def the-empty-termlist (->TermList '()))
+(defn- term->list [coll]
+  (map #(->list %) coll))
+
+(defn- term->vec [coll]
+  (map #(->vec %) coll))
+
+(def the-empty-termlist '())
 
 (defn- adjoin-term [term term-list]
   (if (=zero? (:coeff term))
     term-list
-    (->TermList (cons term (:dat term-list)))))
+    (cons term term-list)))
+
+(defn- make-num-termlist [coll]
+  (map (fn [[n1 n2]] (make-num-term n1 n2))
+       coll))
 
 ;;
 ;; Term arithmetic operations
@@ -40,6 +59,10 @@
                                       (add (:coeff t1) (:coeff t2)))
                               (add-terms (rest L1)
                                          (rest L2)))))))
+
+(defn- add-num-terms [L1 L2]
+  (add-terms (make-num-termlist L1) (make-num-termlist L2)))
+
 (defn- mul-term-by-all-terms [t1 L]
   (if (empty? L)
     the-empty-termlist
@@ -49,7 +72,7 @@
                 (mul (:coeff t1) (:coeff t2)))
         (mul-term-by-all-terms t1 (rest L))))))
 
-(defmethod mul [TermList TermList] [L1 L2]
+(defn- mul-terms [L1 L2]
   (if (empty? L1)
     the-empty-termlist
     (add (mul-term-by-all-terms (first L1) L2)
@@ -92,8 +115,35 @@
   (testing "test =zero?"
     (is (=zero? (->Polynomial 'x (list (->Term 2 (->SchemeNumber 0))))))
     )
-  (testing "test add [TermList TermList]"
-    (let [term1 (->Term 2 (->SchemeNumber 2))
-          tl1 (adjoin-term term1 the-empty-termlist)]
+  (testing "test Term"
+    (is (= '(Term 2 (SchemeNumber 2) (->list (->Term 2 (->SchemeNumber 2))))))
+    (is (= [2 2] (->vec (->Term 2 (->SchemeNumber 2)))))
+    )
+  (testing "test adjoin"
+    (let [tlist (->> the-empty-termlist
+                    (adjoin-term (make-num-term 2 2))
+                    (adjoin-term (make-num-term 3 3)))]
+      (is (= [[3 3] [2 2]] (term->vec tlist)))
     ))
+  (testing "test make-num-termlist"
+      (is (= [[2 2] [3 3]] (term->vec (make-num-termlist [[2 2] [3 3]]))))
+      (is (= [[0 2] [3 3]] (term->vec (make-num-termlist [[0 2] [3 3]]))))
+    )
+  (testing "test add-terms"
+    (is (= [[1 6]] (term->vec (add-terms (make-num-termlist [[1 2]])
+                                         (make-num-termlist [[1 4]])))))
+    (is (= [[0 6]] (term->vec (add-terms (make-num-termlist [[0 2]])
+                                         (make-num-termlist [[0 4]])))))
+    (is (= [[2 2] [1 5]] (term->vec (add-terms (make-num-termlist [[2 2] [1 1]])
+                                               (make-num-termlist [[1 4]])))))
+    (is (= [[2 3] [1 6] [0 1]] (term->vec (add-terms (make-num-termlist [[2 3] [1 2]])
+                                                     (make-num-termlist [[1 4] [0 1]])))))
+    )
+  (testing "test add-num-terms"
+    (is (= [[2 3] [1 6] [0 1]] (term->vec (add-num-terms [[2 3] [1 2]]
+                                                         [[1 4] [0 1]]))))
+    )
+  (testing "test add [Polynomial Polynomial]"
   )
+  )
+

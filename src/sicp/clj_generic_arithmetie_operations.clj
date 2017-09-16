@@ -25,6 +25,8 @@
 
 (defn make-scheme-number [n] (->SchemeNumber n))
 
+(defmethod ->list SchemeNumber [e]
+  (list 'SchemeNumber (:dat e)))
 
 (defmethod add [SchemeNumber SchemeNumber]
   [{x :dat} {y :dat}]
