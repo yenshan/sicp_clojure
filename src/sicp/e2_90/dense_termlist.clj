@@ -1,19 +1,15 @@
 (ns sicp.e2_90.dense-termlist
   (:require [clojure.test :refer :all])
   (:require [sicp.data-directed-lib :refer :all])
-  (:require [sicp.clj-generic-arithmetie-operations :refer :all]))
-
-
-(defmulti ->vec (fn [e] (class e)))
-(defmulti add-terms (fn [e1 e2] [(class e1) (class e2)]))
-(defmulti mul-terms (fn [e1 e2] [(class e1) (class e2)]))
+  (:require [sicp.clj-generic-arithmetie-operations :refer :all])
+  (:require [sicp.e2_90.termlist-interface :refer :all]))
 
 ;;
 ;; abstract data: term list
 ;;
 (defrecord DenseTermList [dat])
 
-(defn- make-dense-num-termlist [coll]
+(defn make-dense-num-termlist [coll]
   (->DenseTermList 
     (map #(->SchemeNumber %) (reverse coll))))
 
@@ -21,14 +17,14 @@
   (vec (reverse 
          (map :dat (:dat coll)))))
 
-(def the-empty-termlist (->DenseTermList []))
+(def ^:private the-empty-termlist (->DenseTermList []))
 
 (defn- adjoin-term [term term-list]
   (->DenseTermList (cons term (:dat term-list))))
 
-(def empty-term? (comp empty? :dat))
-(def first-term (comp first :dat))
-(def rest-terms (comp ->DenseTermList rest :dat))
+(def ^:private empty-term? (comp empty? :dat))
+(def ^:private first-term (comp first :dat))
+(def ^:private rest-terms (comp ->DenseTermList rest :dat))
 
 (defmethod add-terms [DenseTermList DenseTermList] [L1 L2]
   (cond (empty-term? L1) L2
@@ -61,7 +57,7 @@
 ;;
 ;;
 ;;
-(deftest test-sparse-termlist
+(deftest test-dense-termlist
   (testing "test ->vec"
     (is (= [] (->vec the-empty-termlist)))
     )

@@ -2,8 +2,9 @@
   (:require [clojure.test :refer :all])
   (:require [sicp.data-directed-lib :refer :all])
   (:require [sicp.clj-generic-arithmetie-operations :refer :all])
+  (:require [sicp.e2_90.termlist-interface :refer :all])
+  (:require [sicp.e2_90.dense-termlist :refer :all])
   (:require [sicp.e2_90.sparse-termlist :refer :all]))
-
 
 ;;
 ;; arithmetic of polynomial 
@@ -12,6 +13,9 @@
 
 (defn- make-sparse-num-polynomial [variable coll]
   (->Polynomial variable (make-sparse-num-termlist coll)))
+
+(defn- make-dense-num-polynomial [variable coll]
+  (->Polynomial variable (make-dense-num-termlist coll)))
 
 (defmethod ->vec Polynomial [p]
   (list 'x (->vec (:term-list p))))
@@ -46,12 +50,18 @@
     (is (= '(x [[1 2] [0 1]]) 
            (->vec (add (make-sparse-num-polynomial 'x [[1 1]])
                        (make-sparse-num-polynomial 'x [[1 1] [0 1]])))))
+    (is (= '(x [2 2]) 
+           (->vec (add (make-dense-num-polynomial 'x [1 1])
+                       (make-dense-num-polynomial 'x [1 1])))))
                                 
   )
-  (testing "test add [Polynomial Polynomial]"
+  (testing "test mul [Polynomial Polynomial]"
     (is (= '(x [[2 1] [1 1]])
            (->vec (mul (make-sparse-num-polynomial 'x [[1 1]])
                        (make-sparse-num-polynomial 'x [[1 1] [0 1]])))))
+    (is (= '(x [1 2 1]) 
+           (->vec (mul (make-dense-num-polynomial 'x [1 1])
+                       (make-dense-num-polynomial 'x [1 1])))))
 
     )
   (testing "test =zero?"
