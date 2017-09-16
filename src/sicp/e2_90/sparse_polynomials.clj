@@ -75,13 +75,22 @@
 (defn- mul-terms [L1 L2]
   (if (empty? L1)
     the-empty-termlist
-    (add (mul-term-by-all-terms (first L1) L2)
-         (mul (rest L1) L2))))
+    (add-terms (mul-term-by-all-terms (first L1) L2)
+         (mul-terms (rest L1) L2))))
+
+(defn- mul-num-terms [L1 L2]
+  (mul-terms (make-num-termlist L1) (make-num-termlist L2)))
       
 ;;
 ;; arithmetic of polynomial 
 ;;
 (defrecord Polynomial [variable term-list])
+
+(defn- make-num-polynomial [variable coll]
+  (->Polynomial variable (make-num-termlist coll)))
+
+(defmethod ->list Polynomial [p]
+  (list 'x (term->vec (:term-list p))))
 
 (defn variable? [x] (symbol? x))
 
@@ -91,15 +100,15 @@
 (defmethod add [Polynomial Polynomial] [p1 p2]
   (if (same-variable? (:variable p1) (:variable p2))
     (->Polynomial (:variable p1)
-                  (add (:term-list p1)
-                       (:term-list p2)))
+                  (add-terms (:term-list p1)
+                             (:term-list p2)))
     (println "Polys not in same var -- ADD-POLY" (list p1 p2))))
 
 (defmethod mul [Polynomial Polynomial] [p1 p2]
   (if (same-variable? (:variable p1) (:variable p2))
     (->Polynomial (:variable p1)
-                  (mul (:term-list p1)
-                       (:term-list p2)))
+                  (mul-terms (:term-list p1)
+                             (:term-list p2)))
     (println "Polys not in same var -- MUL-POLY" (list p1 p2))))
 
 (defmethod =zero? Polynomial [p]
@@ -143,7 +152,35 @@
     (is (= [[2 3] [1 6] [0 1]] (term->vec (add-num-terms [[2 3] [1 2]]
                                                          [[1 4] [0 1]]))))
     )
+  (testing "test mul-term-by-all-terms"
+    (is (= [[2 1]] (term->vec (mul-term-by-all-terms (make-num-term 1 1)
+                                                     (make-num-termlist [[1 1]])))))
+    (is (= [[2 1] [1 1]] (term->vec (mul-term-by-all-terms (make-num-term 1 1)
+                                                     (make-num-termlist [[1 1] [0 1]])))))
+    )
+  (testing "test mul-terms"
+    (is (= [[2 1] [1 1]] (term->vec (mul-terms (make-num-termlist [[1 1]])
+                                               (make-num-termlist [[1 1] [0 1]])))))
+    )
+  (testing "test mul-num-terms"
+    (is (= [[2 1] [1 1]] (term->vec (mul-num-terms [[1 1]]
+                                                   [[1 1] [0 1]]))))
+    )
   (testing "test add [Polynomial Polynomial]"
+    (is (= '(x [[1 2] [0 1]]) 
+           (->list (add (make-num-polynomial 'x [[1 1]])
+                        (make-num-polynomial 'x [[1 1] [0 1]])))))
+                                
   )
+  (testing "test add [Polynomial Polynomial]"
+    (is (= '(x [[2 1] [1 1]])
+           (->list (mul (make-num-polynomial 'x [[1 1]])
+                        (make-num-polynomial 'x [[1 1] [0 1]])))))
+
+    )
+  (testing "test =zero?"
+    (is (=zero? (make-num-polynomial 'x [[2 0]])))
+    (is (not (=zero? (make-num-polynomial 'x [[0 2]]))))
+    )
   )
 
